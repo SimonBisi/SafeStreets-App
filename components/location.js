@@ -1,49 +1,68 @@
-import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
+import { Alert, Modal, StyleSheet, Text, Pressable, View, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
-
 
 function LocationComponent() {
   const [location, setLocation] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     Location.requestForegroundPermissionsAsync();
   }, []);
 
   async function getLocation() {
+    setLoading(true);
     const locationResult = await Location.getCurrentPositionAsync({});
-    console.log(locationResult);
     const locationString = `${locationResult.coords.latitude}, ${locationResult.coords.longitude}`;
+
+    await new Promise((resolve) => {
+      setTimeout(() => resolve(), 1000)
+    })
+
     setLocation(locationString);
+    setLoading(false);
   }
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 30 }}>Raspberry Pi id: "1" {'\n'} </Text>
-        <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
+      <Text style={{ fontSize: 30 }}>Raspberry Pi id: "1" {"\n"} </Text>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
-        }}>
+        }}
+      >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Location set!</Text>
-            <Pressable style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
               <Text style={styles.textStyle}>Close</Text>
             </Pressable>
           </View>
         </View>
       </Modal>
-      <Pressable style={[styles.button, styles.buttonOpen]}
-        onPress={
-          async() => { await
-            getLocation()
-            setModalVisible(true)
-          }}>
+      <Pressable
+        style={[styles.button, styles.buttonOpen]}
+        onPress={async () => {
+          await getLocation();
+          setModalVisible(true);
+        }}
+      >
         <Text style={styles.textStyle}>Set location</Text>
       </Pressable>
-      <Text style={{ fontSize: 30 }}>{location}</Text>
+      {
+        loading ?
+        <ActivityIndicator size="large"/>:
+        <Text style={{ fontSize: 30 }}>{location}</Text>
+      }
+      
     </View>
   );
 }
@@ -59,17 +78,17 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 22,
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -84,18 +103,18 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonOpen: {
-    backgroundColor: '#2196F3',
+    backgroundColor: "#2196F3",
   },
   buttonClose: {
-    backgroundColor: '#2196F3',
+    backgroundColor: "#2196F3",
   },
   textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
