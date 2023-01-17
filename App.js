@@ -4,11 +4,26 @@ import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createTheme, ThemeProvider } from '@rneui/themed';
 import LocationComponent from "./components/location";
+import ScanComponent from "./components/scan";
 
+const SetupStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+function SetupScreen() {
+  return (
+  <SetupStack.Navigator>
+  <SetupStack.Screen name="ScanComponent" component={ScanComponent} 
+        options={{ title: 'Scan' }}/>
+  <SetupStack.Screen name="LocationComponent" component={LocationComponent} 
+           options={{ title: 'Location' }}/>
+  </SetupStack.Navigator>
+  );
+ }  
+
 const theme = createTheme({
   lightColors: {
     primary: '#1273de',
@@ -28,7 +43,7 @@ export default function App() {
               tabBarIcon: ({ focused, color, size }) => {
                 let iconName;
                 switch (route.name) {
-                  case "Location":
+                  case "Setup":
                     iconName = focused ? 'home-sharp' : 'home-outline';
                     break;
                 }
@@ -38,8 +53,8 @@ export default function App() {
               tabBarInactiveTintColor: 'gray',
             })}
           >
-            <Tab.Screen name="Location" component={LocationComponent} 
-              // options={{headerShown: false}}
+            <Tab.Screen name="Setup" component={SetupScreen} 
+              options={{headerShown: false}}
             />
           </Tab.Navigator>
       </NavigationContainer>
