@@ -18,16 +18,21 @@ function LocationComponent({ route }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  
+  useEffect(() => {
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+    })();
+  }, []);
 
   async function getLocation() {
     setLoading(true);
     const locationResult = await Location.getCurrentPositionAsync({});
     const locationString = `${locationResult.coords.latitude}, ${locationResult.coords.longitude}`;
-
-    await new Promise((resolve) => {
-      setTimeout(() => resolve(), 1000);
-    });
 
     setLocation(locationString);
     setLoading(false);

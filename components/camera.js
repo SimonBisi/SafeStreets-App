@@ -9,13 +9,18 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 
 const { height, width } = Dimensions.get("window");
 
 export default function CameraComponent() {
+  const route = useRoute();
   const navigation = useNavigation();
-  const isFocused = useIsFocused()
+  const isFocused = useIsFocused();
   const [permission, requestPermission] = Camera.useCameraPermissions();
 
   if (!permission) {
