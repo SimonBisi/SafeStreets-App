@@ -1,15 +1,24 @@
-import { Alert, Modal, StyleSheet, Text, Pressable, View, ActivityIndicator } from "react-native";
+import {
+  Alert,
+  Modal,
+  StyleSheet,
+  Text,
+  Pressable,
+  View,
+  ActivityIndicator,
+  BackHandler,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
 
-function LocationComponent() {
+
+function LocationComponent({ route }) {
+  const { cameraMac } = route.params;
   const [location, setLocation] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    Location.requestForegroundPermissionsAsync();
-  }, []);
+  
 
   async function getLocation() {
     setLoading(true);
@@ -17,8 +26,8 @@ function LocationComponent() {
     const locationString = `${locationResult.coords.latitude}, ${locationResult.coords.longitude}`;
 
     await new Promise((resolve) => {
-      setTimeout(() => resolve(), 1000)
-    })
+      setTimeout(() => resolve(), 1000);
+    });
 
     setLocation(locationString);
     setLoading(false);
@@ -26,7 +35,7 @@ function LocationComponent() {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 30 }}>Raspberry Pi id: "1" {"\n"} </Text>
+      <Text style={{ fontSize: 30 }}>{`Raspberry Pi id: "${cameraMac}"`}</Text>
       <Modal
         animationType="slide"
         transparent={true}
@@ -57,12 +66,11 @@ function LocationComponent() {
       >
         <Text style={styles.textStyle}>Set location</Text>
       </Pressable>
-      {
-        loading ?
-        <ActivityIndicator size="large"/>:
+      {loading ? (
+        <ActivityIndicator size="large" />
+      ) : (
         <Text style={{ fontSize: 30 }}>{location}</Text>
-      }
-      
+      )}
     </View>
   );
 }
