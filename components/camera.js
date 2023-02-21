@@ -46,29 +46,38 @@ export default function CameraComponent() {
 
   return (
     <View style={styles.container}>
-      {isFocused && (
-        <Camera
-          style={styles.camera}
-          type={CameraType.back}
-          ratio="1:1"
-          barCodeScannerSettings={{
-            barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
-          }}
-          onBarCodeScanned={isFocused ? onScanned : undefined}
-        >
-          {/* <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-            <Text style={styles.text}>Flip Camera</Text>
-          </TouchableOpacity>
-        </View> */}
-        </Camera>
-      )}
+      <View style={styles.cameraContainer}>
+        {isFocused && (
+          <Camera
+            style={styles.camera}
+            type={CameraType.back}
+            ratio="1:1"
+            barCodeScannerSettings={{
+              barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+            }}
+            onBarCodeScanned={isFocused ? onScanned : undefined}
+          >
+            {/* <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
+              <Text style={styles.text}>Flip Camera</Text>
+            </TouchableOpacity>
+          </View> */}
+          </Camera>
+        )}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    backgroundColor: "#534b55",
+  },
+  cameraContainer: {
     width: width,
     height: width,
     justifyContent: "center",
